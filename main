@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Coût de Vin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .wine-item {
+            margin-bottom: 10px;
+        }
+        .wine-item label {
+            display: inline-block;
+            width: 300px;
+        }
+        .wine-item input {
+            width: 60px;
+        }
+        .header {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .total {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Calculateur de Coût de Vin</h2>
+        <div id="wineList">
+            <!-- Les titres pour les colonnes -->
+            <div class="header">
+                <span style="display: inline-block; width: 300px;">Nom du vin</span>
+                <span style="display: inline-block; width: 200px;">Caisses de 3 (Prix)</span>
+                <span style="display: inline-block; width: 200px;">Caisses de 6 (Prix)</span>
+            </div>
+            <!-- Les champs pour les vins seront générés ici -->
+        </div>
+        <button onclick="calculerCoutTotal()">Calculer le coût total</button>
+        <p class="total">Coût total : <span id="totalCost">0.00</span> €</p>
+    </div>
+
+    <script>
+        // Les noms des bouteilles de vin
+        const nomsDesBouteilles = [
+            "Chateau de Respide Rouge", "Chateau de Respide Blanc",
+            "Château de Valmer - AOC Vouvray sec", "Château de Valmer - AOC Touraine Rosé Nature",
+            "Domaine des Aubuissières - Brut Domaine", "Domaine des Aubuissières - Silex",
+            "Chateau de Nitray - Brut \"Méthode traditionnelle\"", "Chateau de Nitray - Le Côt",
+            "Chateau de Nitray - Chenin demi-sec", "Abbaye de Vallières - Bulles du chapitre Rosé",
+            "Chateau La Faurie Maison Neuve - Lalande de Pomerol", "Château l'Art de Maison Neuve - Montagne-Saint Emilion",
+            "Domaine Bardet et Fils - Bourgogne Blanc", "Domaine Bardet et Fils - Chablis", "Domaine Bardet et Fils - Irancy",
+            "Domaine Vincent Royet - Aligoté", "Domaine Vincent Royet - Pinot Noir",
+            "Domaine Vincent Royet - Maranges"
+        ];
+
+        // Les prix des caisses de 3 bouteilles (respectivement)
+        const prixCaisse3 = [
+            30.90, 31.60, 37.00, 28.80, 34.90, 37.00, 30.10, 24.00, 24.00, 37.10,
+            47.80, 33.40, 36.00, 48.60, 52.20, 28.80, 36.00, 75.60
+        ];
+
+        // Les prix des caisses de 6 bouteilles (respectivement)
+        const prixCaisse6 = [
+            51.60, 52.80, 61.80, 48.00, 58.20, 61.80, 50.30, 40.00, 40.00, 61.90,
+            79.80, 55.80, 60.00, 81.00, 87.00, 48.00, 60.00, 126.00
+        ];
+
+        // Générer les champs pour les vins
+        function genererChamps() {
+            const wineList = document.getElementById("wineList");
+            for (let i = 0; i < nomsDesBouteilles.length; i++) {
+                const wineItem = document.createElement("div");
+                wineItem.className = "wine-item";
+                wineItem.innerHTML = `
+                    <label for="bouteille${i}">${nomsDesBouteilles[i]} :</label>
+                    <input type="number" id="caisse3_${i}" value="0" min="0" placeholder="0">
+                    <span>Prix: ${prixCaisse3[i]} €</span>
+                    <input type="number" id="caisse6_${i}" value="0" min="0" placeholder="0">
+                    <span>Prix: ${prixCaisse6[i]} €</span>
+                `;
+                wineList.appendChild(wineItem);
+            }
+        }
+
+        // Calculer le coût total
+        function calculerCoutTotal() {
+            let total = 0;
+            for (let i = 0; i < nomsDesBouteilles.length; i++) {
+                const quantiteCaisse3 = parseInt(document.getElementById(`caisse3_${i}`).value) || 0;
+                const quantiteCaisse6 = parseInt(document.getElementById(`caisse6_${i}`).value) || 0;
+
+                // Ajouter au total le coût des caisses de 3 et de 6 bouteilles
+                total += quantiteCaisse3 * prixCaisse3[i];
+                total += quantiteCaisse6 * prixCaisse6[i];
+            }
+            document.getElementById("totalCost").innerText = total.toFixed(2);
+        }
+
+        // Initialiser la page
+        window.onload = genererChamps;
+    </script>
+</body>
+</html>
